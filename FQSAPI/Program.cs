@@ -15,15 +15,11 @@ builder.Services.AddSignalR();
 // Add CORS (single definition)
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend", policy =>
+    options.AddPolicy("AllowAll", policy =>
     {
-        policy.WithOrigins(
-            "http://localhost:3000",                 // local dev
-            "https://your-frontend.onrender.com"     // deployed frontend (replace with actual URL)
-        )
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials();
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     });
 });
 
@@ -49,7 +45,7 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection();
 
 // Apply CORS
-app.UseCors("AllowFrontend");
+app.UseCors("AllowAll");
 
 app.UseAuthorization();
 
