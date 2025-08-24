@@ -1,6 +1,7 @@
 using FQSAPI;
 using Microsoft.AspNetCore.SignalR;
 using Firebase.Database;
+using Microsoft.AspNetCore.Cors;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,14 +13,15 @@ builder.Services.AddSwaggerGen();
 // Add SignalR service
 builder.Services.AddSignalR();
 
-// Add CORS (single definition)
+// Add CORS (FIXED VERSION)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.SetIsOriginAllowed(origin => true) // Allow any origin for testing
               .AllowAnyMethod()
-              .AllowAnyHeader();
+              .AllowAnyHeader()
+              .AllowCredentials(); // Crucial for SignalR
     });
 });
 
@@ -36,15 +38,11 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    // Enable swagger locally if you want
-    // app.UseSwagger();
-    // app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
-// Render provides HTTPS already
-// app.UseHttpsRedirection();
-
-// Apply CORS
+// Apply CORS BEFORE other middleware
 app.UseCors("AllowAll");
 
 app.UseAuthorization();
@@ -57,5 +55,3 @@ app.MapHub<QueueHub>("/queueHub");
 // Render sets $PORT automatically
 var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 app.Run($"http://0.0.0.0:{port}");
-
-
