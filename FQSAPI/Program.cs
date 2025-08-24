@@ -1,8 +1,6 @@
 using FQSAPI;
 using Microsoft.AspNetCore.SignalR;
 using Firebase.Database;
-using System.Net;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,23 +12,22 @@ builder.Services.AddSwaggerGen();
 // Add SignalR service
 builder.Services.AddSignalR();
 
-
-var ipv4 = Dns.GetHostEntry(Dns.GetHostName())
-    .AddressList.First(x => x.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-    .ToString();
-
-// Add CORS
+// Add CORS (single definition)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins($"http://{ipv4}:3000", "http://localhost:3000") // your HTML test origins
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials(); // IMPORTANT for SignalR
+        policy.WithOrigins(
+            "http://localhost:3000",                 // local dev
+            "https://your-frontend.onrender.com"     // deployed frontend (replace with actual URL)
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials();
     });
 });
 
+// Firebase client
 builder.Services.AddSingleton(new FirebaseClient(
     "https://fqsdb-f0707-default-rtdb.firebaseio.com/",
     new FirebaseOptions
@@ -43,14 +40,15 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    // comment out for testing
+    // Enable swagger locally if you want
     // app.UseSwagger();
     // app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Render provides HTTPS already
+// app.UseHttpsRedirection();
 
-// Use CORS before MapHub/MapControllers
+// Apply CORS
 app.UseCors("AllowFrontend");
 
 app.UseAuthorization();
@@ -60,4 +58,6 @@ app.MapControllers();
 // Map SignalR hub
 app.MapHub<QueueHub>("/queueHub");
 
-app.Run();
+// Render sets $PORT automatically
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+app.Run($"http://0.0.0.0:{port}");

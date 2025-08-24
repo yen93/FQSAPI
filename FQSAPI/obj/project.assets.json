@@ -2225,11 +2225,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\anito.j\\source\\repos\\FQSAPI\\FQSAPI\\FQSAPI.csproj",
+      "projectUniqueName": "C:\\Users\\anito.j\\source\\repos\\Upskilling\\FQSAPIRepo\\FQSAPI\\FQSAPI.csproj",
       "projectName": "FQSAPI",
-      "projectPath": "C:\\Users\\anito.j\\source\\repos\\FQSAPI\\FQSAPI\\FQSAPI.csproj",
+      "projectPath": "C:\\Users\\anito.j\\source\\repos\\Upskilling\\FQSAPIRepo\\FQSAPI\\FQSAPI.csproj",
       "packagesPath": "C:\\Users\\anito.j\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\anito.j\\source\\repos\\FQSAPI\\FQSAPI\\obj\\",
+      "outputPath": "C:\\Users\\anito.j\\source\\repos\\Upskilling\\FQSAPIRepo\\FQSAPI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
