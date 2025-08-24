@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.SignalR;
 
 namespace FQSAPI
 {
+    [EnableCors("AllowAll")]
     public class QueueHub : Hub
     {
         public async Task SendQueueCode(int queueCode)
