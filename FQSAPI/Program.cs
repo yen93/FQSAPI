@@ -33,6 +33,10 @@ builder.Services.AddSingleton(new FirebaseClient(
         AuthTokenAsyncFactory = () => Task.FromResult("HHYF9DMNTJco2vOBJqKLC3F8LCvgIVc9iHIMiw6v")
     }));
 
+
+// Add HttpClient factory
+builder.Services.AddHttpClient();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

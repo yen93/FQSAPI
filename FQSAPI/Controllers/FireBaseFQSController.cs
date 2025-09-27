@@ -10,6 +10,10 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Server.HttpSys;
 using System.ComponentModel.Design;
 using Newtonsoft.Json.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text;
 
 namespace FQSAPI.Controllers
 {
@@ -19,11 +23,15 @@ namespace FQSAPI.Controllers
     {
         private readonly IHubContext<QueueHub> _hubContext;
         private readonly FirebaseClient _firebaseClient;
+        private readonly HttpClient _httpClient;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public FireBaseFQSController(IHubContext<QueueHub> hubContext, FirebaseClient firebaseClient)
+        public FireBaseFQSController(IHubContext<QueueHub> hubContext, FirebaseClient firebaseClient, IHttpClientFactory httpClientFactory)
         {
             _hubContext = hubContext;
             _firebaseClient = firebaseClient;
+            _httpClientFactory = httpClientFactory;
+            _httpClient = _httpClientFactory.CreateClient(); // Proper initialization
         }
 
         [HttpPost("AddQueueCode")]
@@ -425,6 +433,116 @@ namespace FQSAPI.Controllers
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
+
+        [HttpPost("GetKnowledgeBase")]
+        public async Task<ActionResult<List<ActiveQueueModel>>> GetKnowledgeBase()
+        {
+            try
+            {
+                // First, get all items and filter locally (for debugging)
+                var allItems = await _firebaseClient
+                    .Child("knowledgeBase")
+                    .OnceAsJsonAsync();
+
+                // Deserialize manually into a List; Declare var to store data based on KnowledgeBaseModel
+                var AllKBlist = JsonConvert.DeserializeObject<List<KnowledgeBaseModel>>(allItems);
+
+                // Filter out the first null (index 0)
+                var KB = AllKBlist.Where(x => x != null).ToList();
+                               
+                return Ok(JsonConvert.SerializeObject(KB));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
+        [HttpPost("GetChatResponse")]
+        public async Task<ActionResult<string>> GetChatResponse([FromBody] string message)
+        {
+            try
+            {
+                // First, get all items and filter locally (for debugging)
+                var allItems = await _firebaseClient
+                    .Child("knowledgeBase")
+                    .OnceAsJsonAsync();
+
+                // Deserialize manually into a List; Declare var to store data based on KnowledgeBaseModel
+                var AllKBlist = JsonConvert.DeserializeObject<List<KnowledgeBaseModel>>(allItems);
+
+                // Filter out the first null (index 0)
+                var KB = AllKBlist.Where(x => x != null).ToList();
+                var stringKB = JsonConvert.SerializeObject(KB);
+
+                var AIReply = await GetAIResponse(stringKB, message);
+
+                return Ok(AIReply);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
+        private async Task<string> GetAIResponse(string KB, string prompt)
+        {
+            try
+            {
+                var client = _httpClient;
+
+                string geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyCBwtFtxpmlGBGbjqdOr0uclwvZnE31d3w";
+
+
+                var jsonPayload = new
+                {
+                    contents = new[]
+                    {
+                    new
+                    {
+                        parts = new[]
+                        {
+                            new { text = $"Please create an appropriate chat response based on this knowdledge base:."
+                                        + Environment.NewLine
+                                        + $"user's new prompt: {KB}."
+                                        + Environment.NewLine
+                                        + $"This is the chat message:."
+                                        + Environment.NewLine
+                                        + $"{prompt}"
+                            }
+                        }
+                    }
+                }
+                };
+
+                var jsonString = JsonConvert.SerializeObject(jsonPayload);
+                var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+
+
+                var response = await _httpClient.PostAsync(geminiUrl, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<GeminiResponseModel>(responseBody);
+                    var text = result.Candidates.FirstOrDefault()?
+                                       .Content.Parts.FirstOrDefault()?
+                                       .Text;
+
+                    return text;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.ToString();
+            }
+        }
+
 
     }
 }

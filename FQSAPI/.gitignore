@@ -1,0 +1,19 @@
+# Visual Studio cache/options
+.vs/
+
+# Build results
+FQSAPI/bin/
+FQSAPI/obj/
+
+# User-specific files
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+
+# Visual Studio Code settings
+.vscode/
