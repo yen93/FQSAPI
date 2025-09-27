@@ -435,22 +435,32 @@ namespace FQSAPI.Controllers
         }
 
         [HttpPost("GetKnowledgeBase")]
-        public async Task<ActionResult<List<ActiveQueueModel>>> GetKnowledgeBase()
+        public async Task<ActionResult> GetKnowledgeBase()
         {
             try
             {
                 // First, get all items and filter locally (for debugging)
                 var allItems = await _firebaseClient
                     .Child("knowledgeBase")
-                    .OnceAsJsonAsync();
+                    .OnceAsync<dynamic>();
 
-                // Deserialize manually into a List; Declare var to store data based on KnowledgeBaseModel
-                var AllKBlist = JsonConvert.DeserializeObject<List<KnowledgeBaseModel>>(allItems);
+                var KBList = new List<KnowledgeBaseModel>();
 
-                // Filter out the first null (index 0)
-                var KB = AllKBlist.Where(x => x != null).ToList();
+                foreach (var item in allItems)
+                {
+                    if (item.Object == null) continue;
+
+                    var data = new KnowledgeBaseModel
+                    {
+                        ID = item.Object.ID,
+                        Info = item.Object.Info,
+                        DateAdded = item.Object.DateAdded,
+                    };
+
+                    KBList.Add(data);
+                }
                                
-                return Ok(JsonConvert.SerializeObject(KB));
+                return Ok(JsonConvert.SerializeObject(KBList));
             }
             catch (Exception ex)
             {
@@ -458,8 +468,57 @@ namespace FQSAPI.Controllers
             }
         }
 
+        [HttpPost("AddToKnowledgeBase")]
+        public async Task<ActionResult> AddToKnowledgeBase([FromBody] string info)
+        {
+            try
+            {
+                // First, get all items and filter locally (for debugging)
+                var allItems = await _firebaseClient
+                    .Child("knowledgeBase")
+                    .OnceAsync<dynamic>();
+
+                var KBList = new List<KnowledgeBaseModel>();
+
+                foreach (var item in allItems)
+                {
+                    if (item.Object == null) continue;
+
+                    var data = new KnowledgeBaseModel
+                    {
+                        ID = item.Object.ID,
+                        Info = item.Object.Info,
+                        DateAdded = item.Object.DateAdded,
+                    };
+
+                    KBList.Add(data);
+                }
+
+                var maxID = KBList.Count;
+
+                var KBData = new KnowledgeBaseModel
+                {
+                    ID = maxID + 1,
+                    Info = info,
+                    DateAdded = DateTime.Now
+                };
+
+                // Push the object to Firebase
+                await _firebaseClient
+                    .Child("knowledgeBase")
+                    .PostAsync(KBData);
+
+                return Ok(JsonConvert.SerializeObject("Information has been successfully added!"));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
+
         [HttpPost("GetChatResponse")]
-        public async Task<ActionResult<string>> GetChatResponse([FromBody] string message)
+        public async Task<ActionResult> GetChatResponse([FromBody] string message)
         {
             try
             {
