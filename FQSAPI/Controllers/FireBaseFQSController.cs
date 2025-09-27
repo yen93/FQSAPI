@@ -439,26 +439,7 @@ namespace FQSAPI.Controllers
         {
             try
             {
-                // First, get all items and filter locally (for debugging)
-                var allItems = await _firebaseClient
-                    .Child("knowledgeBase")
-                    .OnceAsync<dynamic>();
-
-                var KBList = new List<KnowledgeBaseModel>();
-
-                foreach (var item in allItems)
-                {
-                    if (item.Object == null) continue;
-
-                    var data = new KnowledgeBaseModel
-                    {
-                        ID = item.Object.ID,
-                        Info = item.Object.Info,
-                        DateAdded = item.Object.DateAdded,
-                    };
-
-                    KBList.Add(data);
-                }
+                var KBList = await GetKBListAsync();
                                
                 return Ok(JsonConvert.SerializeObject(KBList));
             }
@@ -473,26 +454,7 @@ namespace FQSAPI.Controllers
         {
             try
             {
-                // First, get all items and filter locally (for debugging)
-                var allItems = await _firebaseClient
-                    .Child("knowledgeBase")
-                    .OnceAsync<dynamic>();
-
-                var KBList = new List<KnowledgeBaseModel>();
-
-                foreach (var item in allItems)
-                {
-                    if (item.Object == null) continue;
-
-                    var data = new KnowledgeBaseModel
-                    {
-                        ID = item.Object.ID,
-                        Info = item.Object.Info,
-                        DateAdded = item.Object.DateAdded,
-                    };
-
-                    KBList.Add(data);
-                }
+                var KBList = await GetKBListAsync();
 
                 var maxID = KBList.Count;
 
@@ -522,17 +484,9 @@ namespace FQSAPI.Controllers
         {
             try
             {
-                // First, get all items and filter locally (for debugging)
-                var allItems = await _firebaseClient
-                    .Child("knowledgeBase")
-                    .OnceAsJsonAsync();
+                var KBList = await GetKBListAsync();
 
-                // Deserialize manually into a List; Declare var to store data based on KnowledgeBaseModel
-                var AllKBlist = JsonConvert.DeserializeObject<List<KnowledgeBaseModel>>(allItems);
-
-                // Filter out the first null (index 0)
-                var KB = AllKBlist.Where(x => x != null).ToList();
-                var stringKB = JsonConvert.SerializeObject(KB);
+                var stringKB = JsonConvert.SerializeObject(KBList);
 
                 var AIReply = await GetAIResponse(stringKB, message);
 
@@ -542,6 +496,36 @@ namespace FQSAPI.Controllers
             {
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
+        }
+
+
+
+
+
+        private async Task<List<KnowledgeBaseModel>> GetKBListAsync()
+        {
+            // First, get all items and filter locally (for debugging)
+            var allItems = await _firebaseClient
+                .Child("knowledgeBase")
+                .OnceAsync<dynamic>();
+
+            var KBList = new List<KnowledgeBaseModel>();
+
+            foreach (var item in allItems)
+            {
+                if (item.Object == null) continue;
+
+                var data = new KnowledgeBaseModel
+                {
+                    ID = item.Object.ID,
+                    Info = item.Object.Info,
+                    DateAdded = item.Object.DateAdded,
+                };
+
+                KBList.Add(data);
+            }
+
+            return KBList;
         }
 
         private async Task<string> GetAIResponse(string KB, string prompt)
