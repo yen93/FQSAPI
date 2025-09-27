@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FQSAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ae3259c51042e2318f2c2c39f74b198bf36ea81f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+76c90d72066075c2ca34af52e804bf321bc40859")]
 [assembly: System.Reflection.AssemblyProductAttribute("FQSAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FQSAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

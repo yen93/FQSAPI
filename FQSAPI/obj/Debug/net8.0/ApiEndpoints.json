@@ -87,6 +87,52 @@
   },
   {
     "ContainingType": "FQSAPI.Controllers.FireBaseFQSController",
+    "Method": "GetChatResponse",
+    "RelativePath": "FireBaseFQS/GetChatResponse",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "message",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.String",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "FQSAPI.Controllers.FireBaseFQSController",
+    "Method": "GetKnowledgeBase",
+    "RelativePath": "FireBaseFQS/GetKnowledgeBase",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[FQSAPI.Models.ActiveQueueModel, FQSAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "FQSAPI.Controllers.FireBaseFQSController",
     "Method": "GetMenuList",
     "RelativePath": "FireBaseFQS/GetMenuList",
     "HttpMethod": "POST",
