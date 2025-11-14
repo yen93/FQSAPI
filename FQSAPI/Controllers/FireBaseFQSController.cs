@@ -14,6 +14,8 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using MailKit.Net.Smtp;
+using MimeKit;
 
 namespace FQSAPI.Controllers
 {
@@ -504,9 +506,29 @@ namespace FQSAPI.Controllers
         {
             try
             {
+                // Push to firebase
                 await _firebaseClient
                     .Child("ContactFormRequests")
                     .PostAsync(request);
+
+                // Send Email Notif
+                var email = new MimeMessage();
+                email.From.Add(new MailboxAddress("Contact Form", $"{request.Email}"));
+                email.To.Add(new MailboxAddress("Recipient", "keydevsolutions@gmail.com"));
+                email.Subject = "New Contact Form Submission";
+
+                email.Body = new TextPart("plain")
+                {
+                    Text = $"Name: {request.Name}\nEmail: {request.Email}\nMessage:\n{request.Message}"
+                };
+
+                using (var smtp = new SmtpClient())
+                {
+                    await smtp.ConnectAsync("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
+                    await smtp.AuthenticateAsync("keydevsolutions@gmail.com", "qmhm ngys rqgq smwg");
+                    await smtp.SendAsync(email);
+                    await smtp.DisconnectAsync(true);
+                }
 
                 return Ok("Information has been successfully added!");
             }
