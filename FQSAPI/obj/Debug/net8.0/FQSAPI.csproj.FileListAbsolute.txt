@@ -107,3 +107,8 @@ C:\Users\anito.j\source\repos\Upskilling\FQSAPIRepo\FQSAPI\obj\Debug\net8.0\refi
 C:\Users\anito.j\source\repos\Upskilling\FQSAPIRepo\FQSAPI\obj\Debug\net8.0\FQSAPI.pdb
 C:\Users\anito.j\source\repos\Upskilling\FQSAPIRepo\FQSAPI\obj\Debug\net8.0\FQSAPI.genruntimeconfig.cache
 C:\Users\anito.j\source\repos\Upskilling\FQSAPIRepo\FQSAPI\obj\Debug\net8.0\ref\FQSAPI.dll
+C:\Users\anito.j\source\repos\Upskilling\FQSAPIRepo\FQSAPI\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+C:\Users\anito.j\source\repos\Upskilling\FQSAPIRepo\FQSAPI\bin\Debug\net8.0\MailKit.dll
+C:\Users\anito.j\source\repos\Upskilling\FQSAPIRepo\FQSAPI\bin\Debug\net8.0\MimeKit.dll
+C:\Users\anito.j\source\repos\Upskilling\FQSAPIRepo\FQSAPI\bin\Debug\net8.0\System.Security.Cryptography.Pkcs.dll
+C:\Users\anito.j\source\repos\Upskilling\FQSAPIRepo\FQSAPI\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll

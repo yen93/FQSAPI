@@ -290,33 +290,38 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ActiveQueueModel"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ActiveQueueModel"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ActiveQueueModel"
-                  }
-                }
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/FireBaseFQS/AddToKnowledgeBase": {
+      "post": {
+        "tags": [
+          "FireBaseFQS"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "string"
               }
             }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -347,24 +352,38 @@
         },
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/FireBaseFQS/SubmitContactFormRequest": {
+      "post": {
+        "tags": [
+          "FireBaseFQS"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactUsFormModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactUsFormModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactUsFormModel"
               }
             }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -484,6 +503,52 @@
               "type": "integer",
               "format": "int32"
             },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ContactUsFormModel": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "company": {
+            "type": "string",
+            "nullable": true
+          },
+          "serviceNeeded": {
+            "type": "string",
+            "nullable": true
+          },
+          "budgetRange": {
+            "type": "string",
+            "nullable": true
+          },
+          "timeline": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "preferredContactMethod": {
+            "type": "string",
+            "nullable": true
+          },
+          "source": {
+            "type": "string",
             "nullable": true
           }
         },

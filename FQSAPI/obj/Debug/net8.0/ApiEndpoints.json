@@ -21,6 +21,22 @@
   },
   {
     "ContainingType": "FQSAPI.Controllers.FireBaseFQSController",
+    "Method": "AddToKnowledgeBase",
+    "RelativePath": "FireBaseFQS/AddToKnowledgeBase",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "info",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FQSAPI.Controllers.FireBaseFQSController",
     "Method": "CreateMenuItem",
     "RelativePath": "FireBaseFQS/CreateMenuItem",
     "HttpMethod": "POST",
@@ -99,17 +115,7 @@
         "IsRequired": true
       }
     ],
-    "ReturnTypes": [
-      {
-        "Type": "System.String",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
+    "ReturnTypes": []
   },
   {
     "ContainingType": "FQSAPI.Controllers.FireBaseFQSController",
@@ -119,17 +125,7 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.List\u00601[[FQSAPI.Models.ActiveQueueModel, FQSAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
+    "ReturnTypes": []
   },
   {
     "ContainingType": "FQSAPI.Controllers.FireBaseFQSController",
@@ -150,6 +146,22 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "FQSAPI.Controllers.FireBaseFQSController",
+    "Method": "SubmitContactFormRequest",
+    "RelativePath": "FireBaseFQS/SubmitContactFormRequest",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "FQSAPI.Models.ContactUsFormModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "FQSAPI.Controllers.FireBaseFQSController",
