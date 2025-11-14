@@ -499,6 +499,22 @@ namespace FQSAPI.Controllers
         }
 
 
+        [HttpPost("SubmitContactFormRequest")]
+        public async Task<ActionResult> SubmitContactFormRequest([FromBody] ContactUsFormModel request)
+        {
+            try
+            {
+                await _firebaseClient
+                    .Child("ContactFormRequests")
+                    .PostAsync(request);
+
+                return Ok("Information has been successfully added!");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
 
 
 
