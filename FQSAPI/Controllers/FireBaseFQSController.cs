@@ -738,9 +738,9 @@ namespace FQSAPI.Controllers
                 string migsJSon = JsonConvert.SerializeObject(MemberInfo);
                 var AIReply = await GetAIResponseForMIGSQuery(migsJSon);
 
-                var test = new MemberMIGSDataModel();
+                //var test = new MemberMIGSDataModel();
 
-                test = JsonConvert.DeserializeObject<MemberMIGSDataModel>(AIReply);
+                //test = JsonConvert.DeserializeObject<MemberMIGSDataModel>(AIReply);
 
                 return Ok(AIReply);
             }
@@ -863,7 +863,7 @@ namespace FQSAPI.Controllers
             {
                 var client = _httpClient;
 
-                string geminiUrl = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
+                string geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyD72j09vXXhm2EF03P5SBc8dueNCR4wePA";
 
                 // Gen Info
                 var MIGSCriteriaKB = await MIGSCriteriaKBAsync();
