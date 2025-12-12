@@ -1,12 +1,1 @@
-{
-  "Version": 1,
-  "Hash": "W5ccjCn8WKHq2QlvUWff0T/+fcYG8tnQGjZYhKNtvOI=",
-  "Source": "FQSAPI",
-  "BasePath": "_content/FQSAPI",
-  "Mode": "Default",
-  "ManifestType": "Build",
-  "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": [],
-  "Endpoints": []
-}
+{"Version":1,"Hash":"W5ccjCn8WKHq2QlvUWff0T/+fcYG8tnQGjZYhKNtvOI=","Source":"FQSAPI","BasePath":"_content/FQSAPI","Mode":"Default","ManifestType":"Build","ReferencedProjectsConfiguration":[],"DiscoveryPatterns":[],"Assets":[],"Endpoints":[]}

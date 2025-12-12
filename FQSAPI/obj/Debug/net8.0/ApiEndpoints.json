@@ -1,6 +1,26 @@
 [
   {
     "ContainingType": "FQSAPI.Controllers.FireBaseFQSController",
+    "Method": "GetMIGSDataFromDatabase",
+    "RelativePath": "FireBaseFQS",
+    "HttpMethod": "",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[MIGSDataModel, FQSAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "FQSAPI.Controllers.FireBaseFQSController",
     "Method": "AddQueueCode",
     "RelativePath": "FireBaseFQS/AddQueueCode",
     "HttpMethod": "POST",
@@ -146,6 +166,62 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "FQSAPI.Controllers.FireBaseFQSController",
+    "Method": "GetMIGSQueryResponse",
+    "RelativePath": "FireBaseFQS/GetMIGSQueryResponse",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "clientID",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FQSAPI.Controllers.FireBaseFQSController",
+    "Method": "PushEachCriteria",
+    "RelativePath": "FireBaseFQS/PushEachCriteria",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FQSAPI.Controllers.FireBaseFQSController",
+    "Method": "PushMIGSCriteria",
+    "RelativePath": "FireBaseFQS/PushMIGSCriteria",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FQSAPI.Controllers.FireBaseFQSController",
+    "Method": "PushMIGSDataToDB",
+    "RelativePath": "FireBaseFQS/PushMIGSDataToDB",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FQSAPI.Controllers.FireBaseFQSController",
+    "Method": "PushPointsMatrix",
+    "RelativePath": "FireBaseFQS/PushPointsMatrix",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "FQSAPI.Controllers.FireBaseFQSController",

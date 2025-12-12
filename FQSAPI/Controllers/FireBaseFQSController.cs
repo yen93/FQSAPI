@@ -1,21 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Dapper;
-using System.Data.SqlClient;
-using FQSAPI.Models;
-using Microsoft.AspNetCore.SignalR;
-using System.Threading.Tasks;
+﻿using Dapper;
 using Firebase.Database;
 using Firebase.Database.Query;
-using Newtonsoft.Json;
+using FQSAPI.Models;
+using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.HttpSys;
-using System.ComponentModel.Design;
+using Microsoft.AspNetCore.SignalR;
+using MimeKit;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using OfficeOpenXml;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.Design;
+using System.Data.SqlClient;
 using System.Net.Http;
 using System.Text;
-using MailKit.Net.Smtp;
-using MimeKit;
+using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using LicenseContext = OfficeOpenXml.LicenseContext;
+using System.Linq;
+
 
 namespace FQSAPI.Controllers
 {
@@ -27,6 +32,11 @@ namespace FQSAPI.Controllers
         private readonly FirebaseClient _firebaseClient;
         private readonly HttpClient _httpClient;
         private readonly IHttpClientFactory _httpClientFactory;
+
+        static string connString = @"data source = localhost\MSSQLSERVER2; user id = sa; password = D3f@ult!; initial catalog = FQS ;";
+        SqlConnection conn = new SqlConnection(connString);
+
+        private readonly string _connectionString;
 
         public FireBaseFQSController(IHubContext<QueueHub> hubContext, FirebaseClient firebaseClient, IHttpClientFactory httpClientFactory)
         {
@@ -539,6 +549,227 @@ namespace FQSAPI.Controllers
         }
 
 
+        [HttpPost("PushPointsMatrix")]
+        public async Task<ActionResult> PushPointsMatrix()
+        {
+            try
+            {
+                List<MIGSPointsMatrixModel> migsPointsMatrix = new List<MIGSPointsMatrixModel>();
+
+                string query = "select * from tblMIGSPointsMatrix";
+                migsPointsMatrix = conn.Query<MIGSPointsMatrixModel>(query).ToList();
+
+                // 2. Push the object to Firebase
+                await _firebaseClient
+                    .Child("MIGSPointsMatrix")
+                    .PostAsync(migsPointsMatrix);
+
+                return Ok(JsonConvert.SerializeObject("Data has been pushed!"));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
+        [HttpPost("PushMIGSCriteria")]
+        public async Task<ActionResult> PushMIGSCriteria()
+        {
+            try
+            {
+                List<MIGSCriteriaModel> MIGSCriteria = new List<MIGSCriteriaModel>();
+
+                string query = "select * from tblMIGSCriteria";
+                MIGSCriteria = conn.Query<MIGSCriteriaModel>(query).ToList();
+
+                // 2. Push the object to Firebase
+                await _firebaseClient
+                    .Child("MIGSCriteria")
+                    .PostAsync(MIGSCriteria);
+
+                return Ok(JsonConvert.SerializeObject("Data has been pushed!"));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
+        [HttpPost("PushEachCriteria")]
+        public async Task<ActionResult> PushEachCriteria()
+        {
+            try
+            {
+                //tblMIGSYrsMatrix
+                List<MIGSYearsMatrixModel> MIGSYrsMatrix = new List<MIGSYearsMatrixModel>();
+
+                string query = "select * from tblMIGSYrsMatrix";
+                MIGSYrsMatrix = conn.Query<MIGSYearsMatrixModel>(query).ToList();
+
+                await _firebaseClient
+                .Child("MIGSYrsMatrix")
+                .PostAsync(MIGSYrsMatrix);
+
+
+                //tblMIGSShareCapMatrix
+                List<MIGSShareCapMatrixModel> MIGSShareCapMatrix = new List<MIGSShareCapMatrixModel>();
+
+                string query2 = "select * from tblMIGSShareCapMatrix";
+                MIGSShareCapMatrix = conn.Query<MIGSShareCapMatrixModel>(query2).ToList();
+
+                await _firebaseClient
+                    .Child("MIGSShareCapMatrix")
+                    .PostAsync(MIGSShareCapMatrix);
+
+
+                //tblMIGSADBMatrix
+                List<MIGSADBMatrixModel> MIGSADBMatrix = new List<MIGSADBMatrixModel>();
+
+                string query3 = "select * from tblMIGSADBMatrix";
+                MIGSADBMatrix = conn.Query<MIGSADBMatrixModel>(query3).ToList();
+
+                await _firebaseClient
+                    .Child("MIGSADBMatrix")
+                    .PostAsync(MIGSADBMatrix);
+
+
+                //tblMIGSFixedShareCapMatrix
+                List<MIGSFixedShareCapMatrixModel> MIGSFixedShareCapMatrix = new List<MIGSFixedShareCapMatrixModel>();
+
+                string query4 = "select * from tblMIGSFixedShareCapMatrix";
+                MIGSFixedShareCapMatrix = conn.Query<MIGSFixedShareCapMatrixModel>(query4).ToList();
+
+                await _firebaseClient
+                    .Child("MIGSFixedShareCapMatrix")
+                    .PostAsync(MIGSFixedShareCapMatrix);
+
+
+                //tblMIGSPast3Loans
+                List<MIGSPast3LoansModel> MIGSPast3Loans = new List<MIGSPast3LoansModel>();
+
+                string query5 = "select * from tblMIGSPast3Loans";
+                MIGSPast3Loans = conn.Query<MIGSPast3LoansModel>(query5).ToList();
+
+                await _firebaseClient
+                    .Child("MIGSPast3Loans")
+                    .PostAsync(MIGSPast3Loans);
+
+
+                //tblMIGSRecentLoan
+                List<MIGSRecentLoanModel> MIGSRecentLoan = new List<MIGSRecentLoanModel>();
+
+                string query6 = "select * from tblMIGSRecentLoan";
+                MIGSRecentLoan = conn.Query<MIGSRecentLoanModel>(query6).ToList();
+
+                await _firebaseClient
+                    .Child("MIGSRecentLoan")
+                    .PostAsync(MIGSRecentLoan);
+
+
+
+                return Ok(JsonConvert.SerializeObject("All criteria have been pushed!"));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
+        [HttpPost("PushMIGSDataToDB")]
+        public async Task<ActionResult> PushMIGSDataToDB()
+        {
+            try
+            {
+                var migsList = GetMIGSDataFromDatabase();
+
+                // 2. Push the object to Firebase
+                await _firebaseClient
+                    .Child("MIGS")
+                    .PostAsync(migsList);
+
+                return Ok(JsonConvert.SerializeObject("Data has been pushed!"));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
+
+        [HttpPost("GetMIGSQueryResponse")]
+        public async Task<ActionResult> GetMIGSQueryResponse([FromBody] int clientID)
+        {
+            try
+            {
+                var allItems = await _firebaseClient
+            .Child("MIGS")
+            .OnceAsync<dynamic>();
+
+                var MemberInfo = new MIGSFullDataModel();
+                bool found = false;
+
+                foreach (var item in allItems)
+                {
+                    if (item.Object == null) continue;
+
+                    var jsonString = item.Object.ToString();
+                    var list = JsonConvert.DeserializeObject<List<MIGSFullDataModel>>(jsonString);
+
+                    var FinalList = new List<MIGSFullDataModel>(); 
+
+                    FinalList.AddRange(list);
+
+                    if (list == null) continue;
+
+                    var match = FinalList.FirstOrDefault(x => x.ClientID == clientID);
+                    if (match != null)
+                    {
+                        MemberInfo = match;
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    return NotFound($"No MIGS data found for client ID: {clientID}");
+                }
+
+                string migsJSon = JsonConvert.SerializeObject(MemberInfo);
+                var AIReply = await GetAIResponseForMIGSQuery(migsJSon);
+
+                var test = new MemberMIGSDataModel();
+
+                test = JsonConvert.DeserializeObject<MemberMIGSDataModel>(AIReply);
+
+                return Ok(AIReply);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
+
+
+        public List<MIGSDataModel> GetMIGSDataFromDatabase()
+        {
+            try
+            {
+                List<MIGSDataModel> migsDataList = new List<MIGSDataModel>();
+
+                string query = "select * from MIGSData";
+                migsDataList = conn.Query<MIGSDataModel>(query).ToList();
+
+                return migsDataList;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+
 
         private async Task<List<KnowledgeBaseModel>> GetKBListAsync()
         {
@@ -572,7 +803,7 @@ namespace FQSAPI.Controllers
             {
                 var client = _httpClient;
 
-                string geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyCBwtFtxpmlGBGbjqdOr0uclwvZnE31d3w";
+                string geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyD72j09vXXhm2EF03P5SBc8dueNCR4wePA";
 
 
                 var jsonPayload = new
@@ -624,6 +855,353 @@ namespace FQSAPI.Controllers
             }
         }
 
+
+
+        private async Task<string> GetAIResponseForMIGSQuery(string memberData)
+        {
+            try
+            {
+                var client = _httpClient;
+
+                string geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyD72j09vXXhm2EF03P5SBc8dueNCR4wePA";
+
+                // Gen Info
+                var MIGSCriteriaKB = await MIGSCriteriaKBAsync();
+                var MIGSPointsMatrixKB = await MIGSPointsMatrixKBAsync();
+
+                // Criteria
+                var MIGSYrsMatrixKB = await MIGSYrsMatrixKBAsync();
+                var MIGSShareCapMatrixKB = await MIGSShareCapMatrixKBAsync();
+                var MIGSFixedShareCapMatrixKB = await MIGSFixedShareCapMatrixKBAsync();
+                var MIGSADBMatrixKB = await MIGSADBMatrixKBAsync();
+                var MIGSPast3LoansKB = await MIGSPast3LoansKBAsync();
+                var MIGSRecentLoanKB = await MIGSRecentLoanKBAsync();
+
+                var format = new MemberMIGSDataModel();
+                var formatJson = JsonConvert.SerializeObject(format);
+
+                var jsonPayload = new
+                {
+                    contents = new[]
+                    {
+                    new
+                    {
+                        parts = new[]
+                        {
+                            new { text = $"Please create an appropriate chat response based on this data:"
+                                        + Environment.NewLine
+                                        + $"Criteria: {MIGSCriteriaKB}."
+                                        + Environment.NewLine
+                                        + $"PointsMatrix: {MIGSPointsMatrixKB}"
+                                        + Environment.NewLine
+                                        + $"MIGSYrsMatrixKB: {MIGSYrsMatrixKB}"
+                                        + Environment.NewLine
+                                        + $"MIGSShareCapMatrixKB: {MIGSShareCapMatrixKB}."
+                                        + Environment.NewLine
+                                        + $"MIGSFixedShareCapMatrixKB: {MIGSFixedShareCapMatrixKB}"
+                                        + Environment.NewLine
+                                        + $"MIGSADBMatrixKB: {MIGSADBMatrixKB}"
+                                        + Environment.NewLine
+                                        + $"MIGSPast3LoansKB: {MIGSPast3LoansKB}"
+                                        + Environment.NewLine
+                                        + $"MIGSRecentLoanKB: {MIGSRecentLoanKB}"
+                                        + Environment.NewLine
+                                        + $"user's info: {memberData}."
+                                        + Environment.NewLine
+                                        + $"make sure your response is in this json format: {formatJson}."
+                                        + Environment.NewLine
+                                        + $"make sure not to include the ```json at the beginning and ``` at the end of your response."
+                                        + Environment.NewLine
+                                        + $"Just return the plain json string please with no other comment."
+                            }
+                        }
+                    }
+                }
+                };
+
+                var jsonString = JsonConvert.SerializeObject(jsonPayload);
+                var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+
+
+                var response = await _httpClient.PostAsync(geminiUrl, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<GeminiResponseModel>(responseBody);
+                    var text = result.Candidates.FirstOrDefault()?
+                                       .Content.Parts.FirstOrDefault()?
+                                       .Text;
+
+                    return text;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.ToString();
+            }
+        }
+
+
+        private async Task<string> MIGSCriteriaKBAsync()
+        {
+            try
+            {
+                // MIGSCriteria
+                var allItems = await _firebaseClient
+                    .Child("MIGSCriteria")
+                    .OnceAsync<dynamic>();
+
+                var MIGSCriteriaList = new List<MIGSCriteriaModel>();
+
+                foreach (var item in allItems)
+                {
+                    if (item.Object == null) continue;
+
+                    var dataList = JsonConvert.DeserializeObject<List<MIGSCriteriaModel>>(
+                        JsonConvert.SerializeObject(item.Object));
+
+                    MIGSCriteriaList.AddRange(dataList);
+                }
+
+                var MIGSCriteriaJson = JsonConvert.SerializeObject(MIGSCriteriaList);
+
+                return MIGSCriteriaJson;
+
+            } catch(Exception ex)
+            {
+                return null;
+            }
+        }
+
+
+        private async Task<string> MIGSPointsMatrixKBAsync()
+        {
+            try
+            {
+                // MIGSPointsMatrix
+                var allItems2 = await _firebaseClient
+                    .Child("MIGSPointsMatrix")
+                    .OnceAsync<dynamic>();
+
+                var MIGSPointsMatrixList = new List<MIGSPointsMatrixModel>();
+
+                foreach (var item in allItems2)
+                {
+                    if (item.Object == null) continue;
+
+                    var dataList = JsonConvert.DeserializeObject<List<MIGSPointsMatrixModel>>(
+                        JsonConvert.SerializeObject(item.Object));
+
+                    MIGSPointsMatrixList.AddRange(dataList);
+                }
+
+                var MIGSPointsMatrixJson = JsonConvert.SerializeObject(MIGSPointsMatrixList);
+
+                return MIGSPointsMatrixJson;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+
+        private async Task<string> MIGSYrsMatrixKBAsync()
+        {
+            try
+            {
+                // MIGSYearsMatrix
+                var allItems2 = await _firebaseClient
+                    .Child("MIGSYearsMatrix")
+                    .OnceAsync<dynamic>();
+
+                var MIGSYearsMatrixList = new List<MIGSYearsMatrixModel>();
+
+                foreach (var item in allItems2)
+                {
+                    if (item.Object == null) continue;
+
+                    var dataList = JsonConvert.DeserializeObject<List<MIGSYearsMatrixModel>>(
+                        JsonConvert.SerializeObject(item.Object));
+
+                    MIGSYearsMatrixList.AddRange(dataList);
+                }
+
+                var MIGSYearsMatrixJson = JsonConvert.SerializeObject(MIGSYearsMatrixList);
+
+                return MIGSYearsMatrixJson;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+
+        private async Task<string> MIGSShareCapMatrixKBAsync()
+        {
+            try
+            {
+                // MIGSShareCapMatrix
+                var allItems2 = await _firebaseClient
+                    .Child("MIGSShareCapMatrix")
+                    .OnceAsync<dynamic>();
+
+                var MIGSShareCapMatrixList = new List<MIGSShareCapMatrixModel>();
+
+                foreach (var item in allItems2)
+                {
+                    if (item.Object == null) continue;
+
+                    var dataList = JsonConvert.DeserializeObject<List<MIGSShareCapMatrixModel>>(
+                        JsonConvert.SerializeObject(item.Object));
+
+                    MIGSShareCapMatrixList.AddRange(dataList);
+                }
+
+                var MIGSShareCapMatrixJson = JsonConvert.SerializeObject(MIGSShareCapMatrixList);
+
+                return MIGSShareCapMatrixJson;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+
+        private async Task<string> MIGSFixedShareCapMatrixKBAsync()
+        {
+            try
+            {
+                // MIGSFixedShareCapMatrix
+                var allItems2 = await _firebaseClient
+                    .Child("MIGSFixedShareCapMatrix")
+                    .OnceAsync<dynamic>();
+
+                var MIGSFixedShareCapMatrixList = new List<MIGSFixedShareCapMatrixModel>();
+
+                foreach (var item in allItems2)
+                {
+                    if (item.Object == null) continue;
+
+                    var dataList = JsonConvert.DeserializeObject<List<MIGSFixedShareCapMatrixModel>>(
+                        JsonConvert.SerializeObject(item.Object));
+
+                    MIGSFixedShareCapMatrixList.AddRange(dataList);
+                }
+
+                var MIGSFixedShareCapMatrixJson = JsonConvert.SerializeObject(MIGSFixedShareCapMatrixList);
+
+                return MIGSFixedShareCapMatrixJson;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+
+        private async Task<string> MIGSADBMatrixKBAsync()
+        {
+            try
+            {
+                // MIGSADBMatrix
+                var allItems2 = await _firebaseClient
+                    .Child("MIGSADBMatrix")
+                    .OnceAsync<dynamic>();
+
+                var MIGSADBMatrixList = new List<MIGSADBMatrixModel>();
+
+                foreach (var item in allItems2)
+                {
+                    if (item.Object == null) continue;
+
+                    var dataList = JsonConvert.DeserializeObject<List<MIGSADBMatrixModel>>(
+                        JsonConvert.SerializeObject(item.Object));
+
+                    MIGSADBMatrixList.AddRange(dataList);
+                }
+
+                var MIGSADBMatrixJson = JsonConvert.SerializeObject(MIGSADBMatrixList);
+
+                return MIGSADBMatrixJson;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+
+        private async Task<string> MIGSPast3LoansKBAsync()
+        {
+            try
+            {
+                // MIGSPast3Loans
+                var allItems2 = await _firebaseClient
+                    .Child("MIGSPast3Loans")
+                    .OnceAsync<dynamic>();
+
+                var MIGSPast3LoansList = new List<MIGSPast3LoansModel>();
+
+                foreach (var item in allItems2)
+                {
+                    if (item.Object == null) continue;
+
+                    var dataList = JsonConvert.DeserializeObject<List<MIGSPast3LoansModel>>(
+                        JsonConvert.SerializeObject(item.Object));
+
+                    MIGSPast3LoansList.AddRange(dataList);
+                }
+
+                var MIGSPast3LoansJson = JsonConvert.SerializeObject(MIGSPast3LoansList);
+
+                return MIGSPast3LoansJson;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+
+        private async Task<string> MIGSRecentLoanKBAsync()
+        {
+            try
+            {
+                // MIGSRecentLoan
+                var allItems2 = await _firebaseClient
+                    .Child("MIGSRecentLoan")
+                    .OnceAsync<dynamic>();
+
+                var MIGSRecentLoanList = new List<MIGSRecentLoanModel>();
+
+                foreach (var item in allItems2)
+                {
+                    if (item.Object == null) continue;
+
+                    var dataList = JsonConvert.DeserializeObject<List<MIGSRecentLoanModel>>(
+                        JsonConvert.SerializeObject(item.Object));
+
+                    MIGSRecentLoanList.AddRange(dataList);
+                }
+
+                var MIGSRecentLoanJson = JsonConvert.SerializeObject(MIGSRecentLoanList);
+
+                return MIGSRecentLoanJson;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
 
     }
 }
