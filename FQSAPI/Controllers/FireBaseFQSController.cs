@@ -805,7 +805,6 @@ namespace FQSAPI.Controllers
 
                 string geminiUrl = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
 
-
                 var jsonPayload = new
                 {
                     contents = new[]
@@ -863,19 +862,18 @@ namespace FQSAPI.Controllers
             {
                 var client = _httpClient;
 
-                string geminiUrl = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
+                string geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyBXSe3moF8Ogw2oRt6waXSWrOSxuViswLg";
+                //// Gen Info
+                //var MIGSCriteriaKB = await MIGSCriteriaKBAsync();
+                //var MIGSPointsMatrixKB = await MIGSPointsMatrixKBAsync();
 
-                // Gen Info
-                var MIGSCriteriaKB = await MIGSCriteriaKBAsync();
-                var MIGSPointsMatrixKB = await MIGSPointsMatrixKBAsync();
-
-                // Criteria
-                var MIGSYrsMatrixKB = await MIGSYrsMatrixKBAsync();
-                var MIGSShareCapMatrixKB = await MIGSShareCapMatrixKBAsync();
-                var MIGSFixedShareCapMatrixKB = await MIGSFixedShareCapMatrixKBAsync();
-                var MIGSADBMatrixKB = await MIGSADBMatrixKBAsync();
-                var MIGSPast3LoansKB = await MIGSPast3LoansKBAsync();
-                var MIGSRecentLoanKB = await MIGSRecentLoanKBAsync();
+                //// Criteria
+                //var MIGSYrsMatrixKB = await MIGSYrsMatrixKBAsync();
+                //var MIGSShareCapMatrixKB = await MIGSShareCapMatrixKBAsync();
+                //var MIGSFixedShareCapMatrixKB = await MIGSFixedShareCapMatrixKBAsync();
+                //var MIGSADBMatrixKB = await MIGSADBMatrixKBAsync();
+                //var MIGSPast3LoansKB = await MIGSPast3LoansKBAsync();
+                //var MIGSRecentLoanKB = await MIGSRecentLoanKBAsync();
 
                 var format = new MemberMIGSDataModel();
                 var formatJson = JsonConvert.SerializeObject(format);
@@ -888,24 +886,7 @@ namespace FQSAPI.Controllers
                     {
                         parts = new[]
                         {
-                            new { text = $"Please create an appropriate chat response based on this data:"
-                                        + Environment.NewLine
-                                        + $"Criteria: {MIGSCriteriaKB}."
-                                        + Environment.NewLine
-                                        + $"PointsMatrix: {MIGSPointsMatrixKB}"
-                                        + Environment.NewLine
-                                        + $"MIGSYrsMatrixKB: {MIGSYrsMatrixKB}"
-                                        + Environment.NewLine
-                                        + $"MIGSShareCapMatrixKB: {MIGSShareCapMatrixKB}."
-                                        + Environment.NewLine
-                                        + $"MIGSFixedShareCapMatrixKB: {MIGSFixedShareCapMatrixKB}"
-                                        + Environment.NewLine
-                                        + $"MIGSADBMatrixKB: {MIGSADBMatrixKB}"
-                                        + Environment.NewLine
-                                        + $"MIGSPast3LoansKB: {MIGSPast3LoansKB}"
-                                        + Environment.NewLine
-                                        + $"MIGSRecentLoanKB: {MIGSRecentLoanKB}"
-                                        + Environment.NewLine
+                            new { text = $"Please create an appropriate chat response based on this data and the MIGS data I told you to remember before:"
                                         + $"user's info: {memberData}."
                                         + Environment.NewLine
                                         + $"make sure your response is in this json format: {formatJson}."
@@ -1018,7 +999,7 @@ namespace FQSAPI.Controllers
             {
                 // MIGSYearsMatrix
                 var allItems2 = await _firebaseClient
-                    .Child("MIGSYearsMatrix")
+                    .Child("MIGSYrsMatrix")
                     .OnceAsync<dynamic>();
 
                 var MIGSYearsMatrixList = new List<MIGSYearsMatrixModel>();
