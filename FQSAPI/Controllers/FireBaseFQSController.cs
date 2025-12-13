@@ -862,7 +862,7 @@ namespace FQSAPI.Controllers
             {
                 var client = _httpClient;
 
-                string geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyBXSe3moF8Ogw2oRt6waXSWrOSxuViswLg";
+                string geminiUrl = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
                 //// Gen Info
                 //var MIGSCriteriaKB = await MIGSCriteriaKBAsync();
                 //var MIGSPointsMatrixKB = await MIGSPointsMatrixKBAsync();
